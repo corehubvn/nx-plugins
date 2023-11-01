@@ -58,3 +58,20 @@ Follow the prompts to create your commit message. This will ensure that the comm
 ```
 
 Happy coding! 🎉🙌
+
+# Install nx plugins
+
+```bash
+# Install nx plugins
+yarn add -D -W @nx/plugin
+
+# Install nestjs plugin
+yarn add -D -W @nx/nest
+
+# Create a first nestjs plugin
+nx g @nx/plugin:plugin @corehubvn/nestjs-graphql-prisma
+```
+
+```
+
+```
