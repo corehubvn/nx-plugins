@@ -69,9 +69,7 @@ yarn add -D -W @nx/plugin
 yarn add -D -W @nx/nest
 
 # Create a first nestjs plugin
-nx g @nx/plugin:plugin @corehubvn/nestjs-graphql-prisma
-```
-
-```
-
+nx g @nx/plugin:plugin --name=@corehubvn/nestjs-prisma-graphql \
+--directory=packages/nestjs-prisma-graphql \
+--publishable=true
 ```

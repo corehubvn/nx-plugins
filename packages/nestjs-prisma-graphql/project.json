@@ -46,7 +46,8 @@
       "options": {
         "lintFilePatterns": [
           "packages/nestjs-prisma-graphql/**/*.ts",
-          "packages/nestjs-prisma-graphql/package.json"
+          "packages/nestjs-prisma-graphql/package.json",
+          "packages/nestjs-prisma-graphql/generators.json"
         ]
       }
     },
