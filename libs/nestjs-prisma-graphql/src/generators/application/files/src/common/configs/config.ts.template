@@ -1,0 +1,34 @@
+import type { Config } from './config.interface';
+import { join } from 'path';
+
+const isNodeEnvProd = process.env.NODE_ENV === 'production';
+const environment = process.env.ENVIRONMENT || 'prod';
+const isAppEnvProd = environment === 'prod';
+
+const config: Config = {
+  nest: {
+    port: Number(process.env.PORT) || 3000,
+  },
+  runtime: {
+    environment,
+    appVersion: String(process.env.APP_VERSION) || '1.0.0',
+  },
+  cors: {
+    enabled: true,
+  },
+  swagger: {
+    enabled: true,
+    title: 'Nestjs FTW',
+    description: 'The nestjs API description',
+    version: '1.5',
+    path: 'docs',
+  },
+  graphql: {
+    playground: !isAppEnvProd,
+    debug: !isNodeEnvProd,
+    autoSchemaFile: isNodeEnvProd ? true : join(process.cwd(), 'schema.gql'),
+    sortSchema: !isNodeEnvProd,
+  },
+};
+
+export default (): Config => config;

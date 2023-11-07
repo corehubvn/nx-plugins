@@ -1,0 +1,30 @@
+import { Controller, Get } from '@nestjs/common';
+import {
+  HealthCheck,
+  HealthCheckService,
+  PrismaHealthIndicator,
+} from '@nestjs/terminus';
+import { PrismaService } from 'nestjs-prisma';
+
+@Controller('health')
+export class HealthController {
+  constructor(
+    private health: HealthCheckService,
+    private prismaHealth: PrismaHealthIndicator,
+    private prisma: PrismaService
+  ) {}
+
+  @Get()
+  @HealthCheck()
+  async check() {
+    const health = await this.health.check([
+      async () => this.prismaHealth.pingCheck('prisma', this.prisma),
+    ]);
+
+    return {
+      ...health,
+      // Deployment Version
+      appVersion: process.env.APP_VERSION || '0.0.0',
+    };
+  }
+}

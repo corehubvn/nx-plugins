@@ -1,0 +1,13 @@
+import { Resolver, Query } from '@nestjs/graphql';
+
+/**
+ * A placeholder resolver to get the GraphQL server up and running.
+ * Should be removed when adding real resolvers.
+ */
+@Resolver()
+export class AppResolver {
+  @Query(() => String)
+  hello(): string {
+    return 'Hello World!';
+  }
+}
