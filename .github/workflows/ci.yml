@@ -1,0 +1,31 @@
+name: PR to main
+
+on:
+  pull_request:
+    paths-ignore:
+      - '.vscode/**'
+      - 'infra/**'
+      - '*.md'
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        uses: ./.github/actions/install_deps
+
+      - uses: nrwl/nx-set-shas@v3
+      # This line is needed for nx affected to work when CI is running on a PR
+      - run: git branch --track main origin/main
+
+      - run: npx nx format:check
+      - run: npx nx affected -t lint,test,build --parallel=3

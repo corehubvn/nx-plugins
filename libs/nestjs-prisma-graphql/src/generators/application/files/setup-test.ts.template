@@ -1,0 +1,17 @@
+// This code will be executed after the test framework has been installed in the environment.
+// This is useful for installing polyfills or creating global variables.
+// This file is processed and loaded automatically before test files.
+// This is a good place to put global test setup logic.
+
+// Increase the timeout for jest tests.
+jest.setTimeout(60000);
+
+beforeAll(async () => {
+  // Set environment variables before running each test file.
+  process.env.ENVIRONMENT = 'mock';
+});
+
+afterAll(async () => {
+  // Unset environment variables after running each test file.
+  delete process.env.ENVIRONMENT;
+});

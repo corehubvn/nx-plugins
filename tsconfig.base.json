@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@corehubvn/nestjs-prisma-graphql": [
+        "packages/nestjs-prisma-graphql/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

@@ -1,0 +1,11 @@
+.vscode/
+.idea/
+.husky/
+.git/
+.github/
+.vercel/
+.verdaccio/
+.nx/
+node_modules/
+npm-debug.log
+dist/

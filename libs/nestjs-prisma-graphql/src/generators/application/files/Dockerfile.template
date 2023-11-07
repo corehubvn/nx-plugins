@@ -1,0 +1,43 @@
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine
+# to understand why libc6-compat might be needed.
+##################### Builder image #####################
+FROM docker.io/node:lts-alpine as builder
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy entire NX workspace
+COPY . .
+
+# Install dependencies which include postinstall script to generate prisma client for the current OS
+RUN yarn install --frozen-lockfile
+
+# Build the app
+RUN yarn nx build <%= name %> --prod
+
+##################### App's dependencies image #####################
+FROM docker.io/node:lts-alpine as deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy build folder from builder image
+COPY --from=builder /app/dist/apps/<%= name %>/ ./
+
+# Install only production dependencies for the current app & prisma client for the current OS
+RUN yarn install --frozen-lockfile --production
+COPY --from=builder /app/node_modules/.prisma/client  ./node_modules/.prisma/client/
+
+##################### Runner image #####################
+FROM docker.io/node:lts-alpine as runner
+RUN apk add --no-cache dumb-init
+
+ENV NODE_ENV production
+ENV PORT 3000
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app ./
+
+RUN chown -R node:node .
+USER node
+EXPOSE 3000
+CMD ["dumb-init", "node", "main.js"]

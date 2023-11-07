@@ -1,0 +1,152 @@
+{
+  "name": "<%= name %>",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/<%= name %>/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/<%= name %>",
+        "main": "apps/<%= name %>/src/main.ts",
+        "tsConfig": "apps/<%= name %>/tsconfig.app.json",
+        "assets": [
+          "apps/<%= name %>/src/assets",
+          {
+            "glob": "**/*",
+            "input": "apps/<%= name %>/prisma",
+            "output": "prisma"
+          }
+        ],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/<%= name %>/webpack.config.js",
+        "generatePackageJson": true
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "<%= name %>:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "<%= name %>:build:development"
+        },
+        "production": {
+          "buildTarget": "<%= name %>:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/<%= name %>/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/<%= name %>/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "prisma:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma generate"]
+      }
+    },
+    "prisma:studio": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma studio"]
+      }
+    },
+    "prisma:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma db seed"]
+      }
+    },
+    "prisma:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma migrate dev"]
+      }
+    },
+    "prisma:reset": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma migrate reset"]
+      }
+    },
+    "prisma:resolve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma migrate resolve"]
+      }
+    },
+    "prisma:deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma migrate deploy"]
+      }
+    },
+    "prisma:status": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma migrate status"]
+      }
+    },
+    "postinstall": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/<%= name %>",
+        "commands": ["prisma generate"]
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "engine": "docker",
+        "metadata": {
+          "images": ["<%= name %>"],
+          "load": true,
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-"
+          ]
+        }
+      }
+    }
+  },
+  "tags": []
+}

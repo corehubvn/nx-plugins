@@ -1,0 +1,98 @@
+# NestJS-Prisma-GraphQL
+
+A minimal and ready to use NestJS, Prisma and GraphQL boilerplate.
+
+## What included?
+
+### NestJS
+
+- Pre-configured NestJS application:
+  - Endpoints:
+    - `/`: Root endpoint (remove this if you don't need it)
+    - `/docs`: Swagger documentation (remove this if you don't need it)
+    - `/graphql`: GraphQL endpoint
+    - `/health`: Health check endpoint
+  - [CORS](https://docs.nestjs.com/security/cors): Enabled by default
+  - [Validation](https://docs.nestjs.com/techniques/validation): Enabled by default
+  - [Prisma](https://docs.nestjs.com/recipes/prisma): Pre-configured [nestjs-prisma](https://www.npmjs.com/package/nestjs-prisma) module.
+- Modules:
+  - `Health`: Healthcheck [Terminus](https://docs.nestjs.com/recipes/terminus) module
+- Common:
+  - Common configs, classes, decorators, interfaces, paginations etc.
+
+### Prisma
+
+- Pre-configured Prisma schema (with SQLite datasource by default for demo purpose)
+- Pre-configured Prisma NX targets:
+  - `prisma:generate`: Generate Prisma client (this will be run automatically as a part of postinstall script)
+  - `prisma:studio`: Open Prisma Studio `http://localhost:5555`
+  - `prisma:migrate`: Run Prisma migration
+  - `prisma:reset`: Reset Prisma database
+  - `prisma:resolve`: Resolve Prisma schema
+  - `prisma:deploy`: Deploy Prisma schema
+  - `prisma:status`: Check Prisma migration status
+  - `prisma:seed`: Run Prisma seed
+
+Note: |To seed the database, create a `prisma/seed.ts` file and pre-configure the script in the root `package.json`:
+
+```json
+"prisma": {
+  "seed": "ts-node prisma/seed.ts"
+},
+```
+
+Read more:
+
+- [Prisma Migrate](https://www.prisma.io/docs/concepts/components/prisma-migrate)
+- [Prisma Seed](https://www.prisma.io/docs/guides/migrate/seed-database)
+
+### GraphQL
+
+- Code-first approach
+- Pre-configured GraphQL configuration for prod and non-prod environments
+
+### Others
+
+- `test-setup.ts`: Pre-configured test setup for Jest
+- `docker-compose.yml`: Pre-configured Docker Compose file for local development
+- `Dockerfile`: Pre-configured Dockerfile for production deployment
+- `@nx-tools/nx-container`: To build and run the application as a Docker container
+
+```bash
+# To build the docker image
+nx container <%= name %>
+
+# To run the docker container locally
+docker run -p 3000:3000 --env-file apps/<%= name %>/.env <%= name %>:[tag]
+```
+
+## Getting Started
+Preconfigure the `postinstall` script at the root `package.json` file:
+```json
+"postinstall": "nx run-many --target=postinstall --all --parallel"
+```
+
+To start the application locally:
+```bash
+# Prepare the environment
+cp apps/<%= name %>/.env.example apps/<%= name %>/.env
+
+# Install dependencies
+yarn
+
+# Start the application
+nx serve <%= name %>
+```
+
+The <%= name %> should be available at `http://localhost:3000/graphql`.
+
+## Working with Prisma
+
+If you are new to Prisma, please read the [Prisma quickstart](https://www.prisma.io/docs/getting-started/quickstart#2-model-your-data-in-the-prisma-schema) to get started.
+
+### References
+
+Inspired from the following repositories:
+
+- [notiz-dev/nestjs-prisma-starter](https://github.com/notiz-dev/nestjs-prisma-starter)
+- [nx-recipes/nestjs-prisma](https://github.com/nrwl/nx-recipes/tree/main/nestjs-prisma)
